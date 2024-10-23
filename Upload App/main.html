@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            background-color: #F5F9FA;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1px;
+        }
+
+        .image-container img {
+            max-width: 40%;
+            height: auto;
+        }
+
+        .container {
+            background: #F5F9FA;
+            padding: 2em;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+            text-align: left;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 0.75em;
+            margin-bottom: 0.5em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: white;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            width: 100%;
+            padding: 0.75em;
+            margin-bottom: 1em;
+            margin-top: 1em;
+            background-color: #ffffff;
+            color: black;
+            text-align: left;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .custom-file-upload input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-upload span {
+            display: inline-block;
+            width: 100%;
+        }
+
+        button {
+            background-color: #41B26A;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 50%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .clear-button {
+            padding: 0.1em;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            color: black;
+            width: 15%;
+        }
+
+        .clear-button:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .subtext {
+            font-size: 10px;
+            color: #c0c0c0;
+            text-align: center;
+        }
+
+        .spinner-box {
+            display: none; /* Hidden by default */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .uploading-text {
+            margin-top: 10px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('upload-form');
+            const uploadButton = document.getElementById('upload-button');
+            const spinnerBox = document.getElementById('spinnerBox');
+            const webhookUrl = 'YOUR_WEBHOOK_URL'; // Replace with your webhook URL
+
+            spinnerBox.style.display = 'none';
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const callType = document.getElementById('call_type').value;
+                const fileInput = document.getElementById('file');
+                const file = fileInput.files[0];
+
+                // Check if file exceeds 5GB
+                if (file.size > 5 * 1024 * 1024 * 1024) {
+                    alert('File size exceeds the 5GB limit.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', file);
+                spinnerBox.style.display = 'block';
+                uploadButton.disabled = true;
+
+                // Upload the file
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const downloadLink = data.download_url; // Assuming server returns a download link
+
+                        // Send link and form data to the webhook
+                        fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                name: name,
+                                email: email,
+                                call_type: callType,
+                                download_link: downloadLink
+                            })
+                        })
+                        .then(() => {
+                            alert('File uploaded successfully and data sent to the webhook!');
+                        })
+                        .catch(error => {
+                            console.error('Error sending data to the webhook:', error);
+                        });
+                    } else {
+                        alert('File upload failed.');
+                    }
+                    spinnerBox.style.display = 'none';
+                    uploadButton.disabled = false;
+                })
+                .catch(error => {
+                    console.error('File upload error:', error);
+                    spinnerBox.style.display = 'none';
+                    uploadButton.disabled = false;
+                });
+            });
+
+            // Show selected file name
+            document.getElementById('file').addEventListener('change', function() {
+                const fileName = this.files[0] ? this.files[0].name : 'Choose File:';
+                document.getElementById('file-name').textContent = fileName;
+            });
+
+            window.clearFile = function() {
+                document.getElementById('file').value = '';
+                document.getElementById('file-name').textContent = 'Choose File:';
+            };
+        });
+    </script>
+</head>
+<body>
+    <div class="image-container">
+        <img src="/static/img/ScaLawble%20cropped%20copy.png" alt="Logo">
+    </div>
+    <div class="container">
+        <form id="upload-form" enctype="multipart/form-data" method="POST" action="/upload">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" placeholder="Your Name" required><br>
+
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email" required><br>
+
+            <label for="call_type">Call Type</label>
+            <select name="call_type" id="call_type" required>
+                <option value="" disabled selected>Select Call Type</option>
+                <option value="intake">Intake Call</option>
+                <option value="sales">Sales Call</option>
+            </select><br>
+
+            <div class="custom-file-upload-wrapper">
+                <label class="custom-file-upload">
+                    <input type="file" name="file" id="file" accept="*/*" required>
+                    <span id="file-name">Choose File:</span>
+                </label>
+                <div class="file-actions">
+                    <button type="button" class="clear-button" onclick="clearFile()">Clear</button>
+                    <p class="subtext">Accepted file types: mp3, mp4, mpeg, mpga, m4a, wav, webm</p>
+                </div>
+            </div>
+            <br>
+            <button type="submit" id="upload-button">Upload</button>
+        </form>
+        <div class="spinner-box" id="spinnerBox">
+            <div class="spinner"></div>
+            <p class="uploading-text">Uploading your file, please wait...</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,210 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    background-color: #F5F9FA;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1px;
+}
+
+.image-container img {
+    max-width: 40%;
+    height: auto;
+}
+
+.container {
+    background: #F5F9FA;
+    padding: 2em;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+}
+
+h1 {
+    margin-bottom: 1em;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5em;
+    text-align: left;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 0.75em;
+    margin-bottom: 0.5em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    width: 100%;
+    padding: 0.75em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    background-color: #ffffff;
+    color: black;
+    text-align: left;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.3s, border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload span {
+    display: inline-block;
+    width: 100%;
+}
+
+.custom-file-upload:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+button {
+    background-color: #41B26A;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 50%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.clear-button {
+    padding: 0.1em;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    color: black;
+    width: 15%;
+}
+
+.clear-button:hover {
+    background-color: red;
+    color: white;
+}
+
+.subtext {
+    font-size: 10px;
+    color: #c0c0c0;
+    text-align: center;
+}
+
+.upload-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-content {
+    background-color: #F5F9FA; /* Light background color */
+    border-radius: 0.3rem;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Modal Header */
+.modal-header {
+    background-color: #F5F9FA; 
+    color: black; 
+    font-size: 40px;
+    text-align: center;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 5px; /* Add padding */
+    font-size: 14px; /* Increase font size */
+    color: #333; /* Dark text color */
+    width: 400px;
+    text-align: CENTER;
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 10px 20px; /* Add padding */
+    display: flex;
+    justify-content: space-between; /* Space out the buttons */
+}
+
+/* Button Styles */
+.modal-footer .btn {
+    padding: 10px 20px; /* Add padding */
+    border-radius: 0.3rem; /* Rounded corners */
+    margin: 0 10px;
+}
+
+.modal-footer .btn-secondary {
+    color: white; /* White text color */
+}
+
+.modal-footer .btn-primary {
+    color: white; /* White text color */
+}
+.modal {
+    display: none;
+    width: 400px;
+    height: 500px 
+}
+/* Spinner Box */
+.spinner-box {
+    display: none; /* Hidden by default */
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    border-radius: 0.3rem;
+}
+
+/* Spinner */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #007bff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
